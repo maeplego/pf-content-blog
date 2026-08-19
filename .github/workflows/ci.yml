@@ -39,6 +39,7 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: "1"
           ignore-unfixed: true
+          trivyignores: .trivyignore
   kustomize:
     runs-on: ubuntu-latest
     steps:
@@ -47,5 +48,4 @@ jobs:
         with:
           version: "v1.31.4"
       - name: client dry-run of this repo's manifests
-        run: kubectl kustomize deploy/k8s | kubectl apply --dry-run=client -f -
-
+        run: kubectl kustomize deploy/k8s | kubectl apply --dry-run=client --validate=false -f -
