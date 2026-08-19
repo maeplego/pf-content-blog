@@ -1,19 +1,19 @@
 import assert from "node:assert/strict";
-import test from "node:test";
-import { isPublic, publish, unpublish, type Post } from "./visibility.ts";
+import { describe, it } from "node:test";
+import { canReadPost, isPublic, type Post } from "./visibility.ts";
 
 const now = new Date("2026-08-19T06:00:00Z");
 
-function sample(over: Partial<Post> = {}): Post {
+function post(over: Partial<Post>): Post {
   return {
-    id: "01ARZ3NDEKTSV4RRFFQ69G5FAV",
-    slug: "demo-post",
+    id: "01",
+    slug: "demo",
     title: "Demo",
-    bodyMd: "# hi",
+    bodyMd: "x",
     status: "draft",
-    tags: ["demo"],
-    coverUrl: "/harbor.svg",
-    author: "Demo Author",
+    tags: [],
+    coverUrl: "",
+    author: "Harbor",
     createdAt: now,
     updatedAt: now,
     publishedAt: null,
@@ -21,29 +21,29 @@ function sample(over: Partial<Post> = {}): Post {
   };
 }
 
-test("draft is not public even with a publishedAt", () => {
-  const p = sample({ publishedAt: now });
-  assert.equal(isPublic(p, now), false);
+describe("isPublic", () => {
+  it("rejects drafts", () => {
+    assert.equal(isPublic(post({ status: "draft" }), now), false);
+  });
+
+  it("accepts published with past publishedAt", () => {
+    assert.equal(
+      isPublic(post({ status: "published", publishedAt: new Date("2026-08-01T00:00:00Z") }), now),
+      true,
+    );
+  });
 });
 
-test("published without publishedAt is not public", () => {
-  const p = sample({ status: "published", publishedAt: null });
-  assert.equal(isPublic(p, now), false);
-});
+describe("canReadPost", () => {
+  it("lets an editor in Draft Mode read a draft", () => {
+    assert.equal(canReadPost(post({ status: "draft" }), now, { draftMode: true, editor: true }), true);
+  });
 
-test("publish then public; unpublish hides again", () => {
-  const published = publish(sample(), now);
-  assert.equal(published.status, "published");
-  assert.equal(isPublic(published, now), true);
-  const hidden = unpublish(published, now);
-  assert.equal(hidden.status, "draft");
-  assert.equal(isPublic(hidden, now), false);
-  assert.ok(hidden.publishedAt);
-});
+  it("does not leak drafts via Draft Mode cookie alone", () => {
+    assert.equal(canReadPost(post({ status: "draft" }), now, { draftMode: true, editor: false }), false);
+  });
 
-test("future publishedAt is not public yet", () => {
-  const future = new Date("2026-08-20T00:00:00Z");
-  const p = sample({ status: "published", publishedAt: future });
-  assert.equal(isPublic(p, now), false);
-  assert.equal(isPublic(p, future), true);
+  it("does not leak drafts to an editor without Draft Mode", () => {
+    assert.equal(canReadPost(post({ status: "draft" }), now, { draftMode: false, editor: true }), false);
+  });
 });

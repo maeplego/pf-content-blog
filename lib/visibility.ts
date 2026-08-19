@@ -32,3 +32,13 @@ export function publish(post: Post, now: Date): Post {
 export function unpublish(post: Post, now: Date): Post {
   return { ...post, status: "draft", updatedAt: now };
 }
+
+/** Public URL may show a draft only when Next.js Draft Mode is on *and* the viewer is an editor. */
+export function canReadPost(
+  post: Pick<Post, "status" | "publishedAt">,
+  now: Date,
+  opts: { draftMode: boolean; editor: boolean },
+): boolean {
+  if (isPublic(post, now)) return true;
+  return opts.draftMode && opts.editor;
+}

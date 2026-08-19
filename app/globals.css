@@ -27,3 +27,15 @@ button.secondary { background: #44403c; }
 .status { display: inline-block; font-size: 0.75rem; padding: 0.1rem 0.45rem; border-radius: 999px; border: 1px solid var(--line); }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+.draft-banner {
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  color: #9a3412;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+}
+.bars { display: flex; align-items: flex-end; gap: 0.45rem; min-height: 160px; margin: 0.75rem 0; }
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 2.4rem; }
+.bar { width: 1.4rem; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; }
+.bar-label { font-size: 0.7rem; color: var(--muted); text-align: center; font-family: ui-monospace, Consolas, monospace; }
+.link-list { list-style: none; padding: 0; }

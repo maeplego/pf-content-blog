@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ShortenerGraph } from "./ShortenerGraph";
 
 type Post = {
   id: string;
@@ -43,13 +44,25 @@ export default function AdminPage() {
 
   async function login() {
     await fetch("/api/dev-login", { method: "POST" });
+    await fetch("/api/draft", { method: "POST" });
     await refresh();
   }
 
   async function logout() {
+    await fetch("/api/draft", { method: "DELETE" });
     await fetch("/api/dev-login", { method: "DELETE" });
     setAuthed(false);
     setPosts([]);
+  }
+
+  async function enableDraft() {
+    const res = await fetch("/api/draft", { method: "POST" });
+    setMsg(res.ok ? "Draft Mode on（公開 URL で下書きをプレビュー）" : `draft ${res.status}`);
+  }
+
+  async function disableDraft() {
+    await fetch("/api/draft", { method: "DELETE" });
+    setMsg("Draft Mode off");
   }
 
   function load(p: Post) {
@@ -125,6 +138,12 @@ export default function AdminPage() {
       <button type="button" className="secondary" onClick={logout}>
         Logout
       </button>
+      <button type="button" className="secondary" onClick={() => void enableDraft()}>
+        Enable Draft Mode
+      </button>
+      <button type="button" className="secondary" onClick={() => void disableDraft()}>
+        Disable Draft Mode
+      </button>
       <div className="grid2">
         <section>
           <h2>記事</h2>
@@ -138,7 +157,11 @@ export default function AdminPage() {
                 <span className="status">{p.status}</span> {p.slug}
               </div>
               {p.status === "draft" ? (
-                <a href={`/admin/preview/${p.slug}`}>プレビュー</a>
+                <>
+                  <a href={`/admin/preview/${p.slug}`}>管理プレビュー</a>
+                  {" · "}
+                  <a href={`/posts/${p.slug}`}>Draft Mode の公開 URL</a>
+                </>
               ) : (
                 <a href={`/posts/${p.slug}`}>公開ページ</a>
               )}
@@ -169,6 +192,7 @@ export default function AdminPage() {
           <pre className="muted">{msg}</pre>
         </section>
       </div>
+      <ShortenerGraph />
     </main>
   );
 }

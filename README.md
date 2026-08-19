@@ -14,7 +14,7 @@ P08 技術ブログ CMS（アイデア 07）です。**学習用であり、本�
 | `lib/` | slug、公開判定、Markdown、Postgres / メモリ |
 | `public/harbor.svg` | 架空カバー（P03 代替） |
 
-下書きは `GET /posts/:slug` で 404。編集者だけ `/admin/preview/:slug`。
+下書きは未ログインの `GET /posts/:slug` で 404。Dev login 後に Draft Mode を有効にすると、同じ公開 URL でプレビューできる（cookie だけでは足りず編集者必須）。OG 画像は `app/posts/[slug]/opengraph-image.tsx`。管理画面に短縮の日次バーグラフがあります。
 
 ## 単体起動
 
@@ -35,7 +35,7 @@ npm run dev
 
 ## 既知の制限
 
-- Tailwind / MDX / Draft Mode / OG 画像生成は未着手（Markdown + 小さな CSS）
+- Tailwind / MDX は未着手（Markdown + 小さな CSS）。Draft Mode と OG 画像はこのスライスで実装済み
 - 予約投稿ワーカー、全文検索、いいね、コメントなし
 - overlay E / K8s は `pf-cloud-k8s` overlay `e-content`（P11 なし）。単体デモは Compose が正。
 
