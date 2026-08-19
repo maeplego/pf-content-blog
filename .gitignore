@@ -1,0 +1,17 @@
+node_modules/
+.next/
+*.log
+coverage.out
+
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+chat-context/
+
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
