@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    app: content-blog
+spec:
+  selector:
+    app: content-blog
+  ports:
+    - name: http
+      port: 3007
+      targetPort: 3007

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: content-blog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-blog
+  template:
+    metadata:
+      labels:
+        app: content-blog
+    spec:
+      containers:
+        - name: web
+          image: pf-content-blog:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3007
+              name: http
+          env:
+            - name: PORT
+              value: "3007"
+            - name: HOSTNAME
+              value: "0.0.0.0"
+            - name: CONTENT_DEV_AUTH
+              value: "true"
+            - name: CONTENT_PUBLIC_URL
+              value: http://blog.localhost
+            - name: CONTENT_DATABASE_URL
+              value: postgres://content:dev-content@postgres.platform.svc.cluster.local:5432/content?sslmode=disable
+            - name: SHORTENER_API_URL
+              value: http://shortener.p08.svc.cluster.local:8094
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector.platform.svc.cluster.local:4318
+            - name: OTEL_SERVICE_NAME
+              value: content-blog
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: 3007
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3007
+            initialDelaySeconds: 25
+            periodSeconds: 10

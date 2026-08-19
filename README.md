@@ -37,6 +37,6 @@ npm run dev
 
 - Tailwind / MDX / Draft Mode / OG 画像生成は未着手（Markdown + 小さな CSS）
 - 予約投稿ワーカー、全文検索、いいね、コメントなし
-- overlay E / K8s は未着手
+- overlay E / K8s は `pf-cloud-k8s` overlay `e-content`（P11 なし）。単体デモは Compose が正。
 
 設計: `project/portfolio-plan/content-platform/DESIGN.md`
