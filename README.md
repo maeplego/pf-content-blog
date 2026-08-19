@@ -21,6 +21,6 @@ npm run dev
 
 下書きは未ログインの公開 URL では 404 です。開発ログイン後に Draft Mode を付けると、同じ URL でプレビューできます。OG 画像と、管理画面の短縮クリック日次グラフもあります。
 
-Markdown + 小さな CSS です。予約投稿、全文検索、コメントはありません。
+Markdown + 小さな CSS です。記事の `javascript:` リンクは HTML の `href` にしません。予約投稿、全文検索、コメントはありません。
 
 設計の詳細は [portfolio-plan](https://github.com/maeplego/portfolio-plan) の `portfolio-plan/content-platform/docs/` です。
