@@ -14,7 +14,7 @@ P08 技術ブログ CMS（アイデア 07）です。**学習用であり、本�
 | `lib/` | slug、公開判定、Markdown、Postgres / メモリ |
 | `public/harbor.svg` | 架空カバー（P03 代替） |
 
-下書きは未ログインの `GET /posts/:slug` で 404。Dev login 後に Draft Mode を有効にすると、同じ公開 URL でプレビューできる（cookie だけでは足りず編集者必須）。OG 画像は `app/posts/[slug]/opengraph-image.tsx`。管理画面に短縮の日次バーグラフがあります。
+公開記事のシードは `why-redirect-is-not-nextjs` と `why-fifteen-products`（15 にまとめた理由とやらなかったこと）。下書きは未ログインの `GET /posts/:slug` で 404。Dev login 後に Draft Mode を有効にすると、同じ公開 URL でプレビューできる（cookie だけでは足りず編集者必須）。OG 画像は `app/posts/[slug]/opengraph-image.tsx`。管理画面に短縮の日次バーグラフがあります。
 
 ## 単体起動
 

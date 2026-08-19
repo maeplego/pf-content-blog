@@ -1,4 +1,4 @@
-import { newId } from "./memory";
+import { ulid } from "ulid";
 import type { PostStore } from "./store";
 
 const publishedBody = `# Why the redirect path is not Next.js
@@ -16,6 +16,24 @@ Harbor Press therefore keeps:
 Sequential codes are forbidden. Demo destinations must be on an allowlist so an open redirect cannot turn this into a phishing helper.
 
 Cover image is a local SVG (\`/harbor.svg\`). P03 media is optional for this slice.
+`;
+
+const fifteenBody = `# Why this portfolio is 15 products, not 30 toys
+
+This is a **fictional** Harbor Press article. It is not a real company blog post and names no real people.
+
+Thirty idea files were merged when they shared an actor, a consistency boundary, and a stronger interview story. Login and file attach were **not** enough to merge: those go through the identity and media platforms instead of being copied.
+
+What this portfolio **does not** do, on purpose:
+
+- AWS \`terraform apply\` (modules exist; a live bill is not the demo)
+- Putting the Expo habit app on Kubernetes
+- Starting every product at once on a 12 GB Docker Desktop cluster
+- Claiming labor-law completeness for attendance, or real card numbers for commerce
+
+Recruiters should start at Compose packs (\`portfolio-plan/REVIEW.md\`), not overlay switching. Kubernetes overlays are an optional depth demo for infrastructure interviews.
+
+The three-point live set is identity (P01), one UI product (workspace or commerce), and one depth pick (observability, developer platform, incidents, or recommend).
 `;
 
 const draftBody = `# Notes on scheduled posts (draft)
@@ -42,7 +60,22 @@ export async function seedIfEmpty(store: PostStore): Promise<void> {
         status: "published",
       },
       now,
-      newId(),
+      ulid(),
+    );
+  }
+  if (!existing.find((p) => p.slug === "why-fifteen-products")) {
+    await store.create(
+      {
+        title: "Why this portfolio is 15 products, not 30 toys",
+        slug: "why-fifteen-products",
+        bodyMd: fifteenBody,
+        tags: ["portfolio", "design"],
+        coverUrl: "/harbor.svg",
+        author: "Demo Author",
+        status: "published",
+      },
+      now,
+      ulid(),
     );
   }
   if (!existing.find((p) => p.slug === "notes-on-scheduled-posts")) {
@@ -57,7 +90,7 @@ export async function seedIfEmpty(store: PostStore): Promise<void> {
         status: "draft",
       },
       now,
-      newId(),
+      ulid(),
     );
   }
 }
