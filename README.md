@@ -23,4 +23,11 @@ npm run dev
 
 Markdown + 小さな CSS です。記事の `javascript:` リンクは HTML の `href` にしません。予約投稿、全文検索、コメントはありません。
 
+公開記事のブラウザ確認（メモリ store。既定 CI では動かない）:
+
+```powershell
+npx playwright install chromium
+npm run test:e2e
+```
+
 設計の詳細は [portfolio-plan](https://github.com/maeplego/portfolio-plan) の `portfolio-plan/content-platform/docs/` です。

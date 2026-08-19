@@ -1,5 +1,9 @@
 node_modules/
 .next/
+
+# Playwright
+/test-results/
+/playwright-report/
 *.log
 coverage.out
 
