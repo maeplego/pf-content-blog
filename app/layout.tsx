@@ -12,24 +12,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body>
-        <header className="site">
-          <a href="/" style={{ textDecoration: "none" }}>
-            <strong>Harbor Press</strong>
-            <span className="muted" style={{ marginLeft: "0.6rem", fontSize: "0.9rem" }}>
-              学習用ブログ CMS
-            </span>
-          </a>
-          <nav>
-            <a href="/">記事</a>
-            {" · "}
-            <a href="/demo">デモ</a>
-            {" · "}
-            <a href="/admin">管理</a>
-            {" · "}
-            <a href="/rss.xml">RSS</a>
-          </nav>
-        </header>
-        {children}
+        <div className="site-shell">
+          <header className="site-header">
+            <div className="site-brand">
+              <strong>
+                <a href="/" className="card-link">
+                  Harbor Press
+                </a>
+              </strong>
+              <span className="muted">学習用ブログ CMS</span>
+            </div>
+            <nav className="site-nav">
+              <a href="/">記事</a>
+              <a href="/demo">デモ</a>
+              <a href="/admin">管理</a>
+              <a href="/rss.xml">RSS</a>
+            </nav>
+          </header>
+          <main className="site-main">{children}</main>
+        </div>
       </body>
     </html>
   );
