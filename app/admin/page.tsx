@@ -26,6 +26,7 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [msg, setMsg] = useState("");
+  const [mediaEnabled, setMediaEnabled] = useState(false);
   const [form, setForm] = useState({
     id: "",
     title: "",
@@ -52,6 +53,10 @@ export default function AdminPage() {
       .then((res) => res.json())
       .then((body) => setSession(body as Session))
       .catch(() => setSession(null));
+    fetch("/api/media/upload")
+      .then((res) => res.json())
+      .then((body) => setMediaEnabled(Boolean(body.enabled)))
+      .catch(() => setMediaEnabled(false));
     refresh();
   }, []);
 
@@ -89,6 +94,20 @@ export default function AdminPage() {
       status: p.status,
     });
     setMsg("");
+  }
+
+  async function uploadCover(file: File) {
+    setMsg("uploading cover...");
+    const body = new FormData();
+    body.set("file", file);
+    const res = await fetch("/api/media/upload", { method: "POST", body });
+    const json = await res.json();
+    if (!res.ok) {
+      setMsg(`${res.status} ${json.error?.message ?? ""}`);
+      return;
+    }
+    setForm((f) => ({ ...f, coverUrl: json.coverUrl }));
+    setMsg(`cover uploaded`);
   }
 
   async function save(status: "draft" | "published") {
@@ -205,6 +224,20 @@ export default function AdminPage() {
           <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
           <label>coverUrl（ローカルパスまたは URL。P03 任意）</label>
           <input value={form.coverUrl} onChange={(e) => setForm({ ...form, coverUrl: e.target.value })} />
+          {mediaEnabled ? (
+            <label className="muted" style={{ display: "block", marginTop: "0.5rem" }}>
+              P03 cover upload{" "}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void uploadCover(file);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          ) : null}
           <label>Markdown</label>
           <textarea value={form.bodyMd} onChange={(e) => setForm({ ...form, bodyMd: e.target.value })} />
           <button type="button" onClick={() => save("draft")}>
