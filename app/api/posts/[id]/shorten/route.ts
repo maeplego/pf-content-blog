@@ -12,7 +12,7 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function POST(req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
   try {
-    const sub = requireSub(subFromRequest(req));
+    const sub = requireSub(await subFromRequest(req));
     const store = await getStore();
     const post = await store.byId(id);
     if (!post) {

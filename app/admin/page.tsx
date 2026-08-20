@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 import { ShortenerGraph } from "./ShortenerGraph";
 
+type Session = {
+  oidc: boolean;
+  loggedIn: boolean;
+  sub: string | null;
+  displayName: string | null;
+  devMode: boolean;
+};
+
 type Post = {
   id: string;
   slug: string;
@@ -14,6 +22,7 @@ type Post = {
 };
 
 export default function AdminPage() {
+  const [session, setSession] = useState<Session | null>(null);
   const [authed, setAuthed] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [msg, setMsg] = useState("");
@@ -39,6 +48,10 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
+    fetch("/api/session", { credentials: "same-origin", cache: "no-store" })
+      .then((res) => res.json())
+      .then((body) => setSession(body as Session))
+      .catch(() => setSession(null));
     refresh();
   }, []);
 
@@ -118,13 +131,22 @@ export default function AdminPage() {
   }
 
   if (!authed) {
+    const oidcBlocked = Boolean(session?.oidc && !session.loggedIn);
     return (
       <main>
         <h1>管理</h1>
-        <p className="muted">P01 は未配線。CONTENT_DEV_AUTH=true のときだけ開発ログインできます。</p>
-        <button type="button" onClick={login}>
-          Dev login as editor
-        </button>
+        {oidcBlocked ? (
+          <p className="muted">P01 でログインしてください。</p>
+        ) : (
+          <p className="muted">CONTENT_DEV_AUTH=true のとき開発ログイン、または OIDC で編集できます。</p>
+        )}
+        {oidcBlocked ? (
+          <a href="/login">ログイン</a>
+        ) : (
+          <button type="button" onClick={login}>
+            Dev login as editor
+          </button>
+        )}
       </main>
     );
   }
@@ -138,6 +160,11 @@ export default function AdminPage() {
       <button type="button" className="secondary" onClick={logout}>
         Logout
       </button>
+      {session?.oidc ? (
+        <a href="/logout" className="secondary" style={{ marginLeft: "0.5rem" }}>
+          OIDC logout
+        </a>
+      ) : null}
       <button type="button" className="secondary" onClick={() => void enableDraft()}>
         Enable Draft Mode
       </button>

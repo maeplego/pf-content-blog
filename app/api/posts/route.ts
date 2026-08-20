@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const all = url.searchParams.get("all") === "1";
   if (all) {
     try {
-      requireSub(subFromRequest(req));
+      requireSub(await subFromRequest(req));
     } catch (err) {
       const { status, message } = errorStatus(err);
       return NextResponse.json({ error: { code: "unauthorized", message } }, { status });
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    requireSub(subFromRequest(req));
+    requireSub(await subFromRequest(req));
     const store = await getStore();
     const body = (await req.json()) as Record<string, unknown>;
     const input = validateInput(body, "draft");

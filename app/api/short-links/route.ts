@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   try {
-    const sub = requireSub(subFromRequest(req));
+    const sub = requireSub(await subFromRequest(req));
     const url = new URL(req.url);
     const id = url.searchParams.get("id")?.trim();
     if (id) {

@@ -16,7 +16,7 @@ export async function GET(req: Request, ctx: Ctx) {
   if (!post) {
     return NextResponse.json({ error: { code: "not_found", message: "not found" } }, { status: 404 });
   }
-  const sub = subFromRequest(req);
+  const sub = await subFromRequest(req);
   if (!isPublic(post, new Date()) && !sub) {
     return NextResponse.json({ error: { code: "not_found", message: "not found" } }, { status: 404 });
   }
@@ -26,7 +26,7 @@ export async function GET(req: Request, ctx: Ctx) {
 export async function PATCH(req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
   try {
-    requireSub(subFromRequest(req));
+    requireSub(await subFromRequest(req));
     const store = await getStore();
     const body = (await req.json()) as Record<string, unknown>;
     const cur = await store.byId(id);
