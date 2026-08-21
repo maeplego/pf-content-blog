@@ -1,4 +1,4 @@
-# pf-content-blog
+﻿# pf-content-blog
 
 学習用の技術ブログです。公開記事はログインなしで読めます。管理は開発用ログインだけです。シード記事は架空の Harbor Press で、実在の個人情報は含みません。**本番 CMS の置き換えではありません。**
 
@@ -31,3 +31,13 @@ npm run test:e2e
 ```
 
 設計の詳細は [portfolio-plan](https://github.com/maeplego/portfolio-plan) の `portfolio-plan/content-platform/docs/` です。
+
+## ライセンスと利用条件
+
+本リポジトリは **デモ・学習・社内評価用** です。現状品質に **保証はありません**。
+
+- 許可: クローン、ローカル実行、学習、非本番の評価
+- 別契約が必要: 本番運用、有償サービスへの組込み、再販・托管の提供
+
+詳細は [LICENSE](./LICENSE) と [licensing.md](https://github.com/maeplego/portfolio-plan/blob/master/portfolio-plan/licensing.md) を参照してください。
+
