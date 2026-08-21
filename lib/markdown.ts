@@ -1,4 +1,4 @@
-import { marked } from "marked";
+import { marked, type Tokens } from "marked";
 
 marked.setOptions({ gfm: true, breaks: true });
 
@@ -15,21 +15,21 @@ function linkParts(
 
 marked.use({
   renderer: {
-    link(tokenOrHref: never, title?: string | null, text?: string) {
-      const { href, title: t, text: label } = linkParts(tokenOrHref, title, text);
-      if (!isSafeHref(href, "link")) {
+    link({ href, title, text }: Tokens.Link) {
+      const { href: h, title: t, text: label } = linkParts({ href, title, text });
+      if (!isSafeHref(h, "link")) {
         return label;
       }
       const titleAttr = t ? ` title="${escapeAttr(t)}"` : "";
-      return `<a href="${escapeAttr(href ?? "")}" rel="noopener noreferrer"${titleAttr}>${label}</a>`;
+      return `<a href="${escapeAttr(h ?? "")}" rel="noopener noreferrer"${titleAttr}>${label}</a>`;
     },
-    image(tokenOrHref: never, title?: string | null, text?: string) {
-      const { href, title: t, text: label } = linkParts(tokenOrHref, title, text);
-      if (!isSafeHref(href, "image")) {
+    image({ href, title, text }: Tokens.Image) {
+      const { href: h, title: t, text: label } = linkParts({ href, title, text });
+      if (!isSafeHref(h, "image")) {
         return escapeAttr(label);
       }
       const titleAttr = t ? ` title="${escapeAttr(t)}"` : "";
-      return `<img src="${escapeAttr(href ?? "")}" alt="${escapeAttr(label)}"${titleAttr}>`;
+      return `<img src="${escapeAttr(h ?? "")}" alt="${escapeAttr(label)}"${titleAttr}>`;
     },
   },
 });
